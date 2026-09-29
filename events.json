@@ -115,7 +115,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-10-17-aik",
@@ -137,7 +138,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-10-24-aik",
@@ -159,7 +161,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-10-27-aik",
@@ -181,7 +184,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-11-02-aik",
@@ -203,7 +207,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-11-08-aik",
@@ -225,7 +230,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-11-21-aik",
@@ -247,7 +253,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-11-29-aik",
@@ -269,7 +276,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/aik",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "aik"
  },
  {
   "id": "fb-2026-10-11-ham",
@@ -291,7 +299,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "fb-2026-10-18-ham",
@@ -313,7 +322,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "fb-2026-10-25-ham",
@@ -335,7 +345,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "fb-2026-10-29-ham",
@@ -357,7 +368,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "fb-2026-11-01-ham",
@@ -379,7 +391,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "fb-2026-11-06-ham",
@@ -401,7 +414,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "fb-2026-11-23-ham",
@@ -423,7 +437,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "fb-2026-11-29-ham",
@@ -445,7 +460,8 @@
   "link": "https://allsvenskanstatistik.se/matcher/hammarby",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "hammarby"
  },
  {
   "id": "nt-2026-10-02-men",
@@ -467,7 +483,8 @@
   "link": "https://www.sportbibeln.se/fotboll/nations-league-sveriges-matcher-och-tv-tider/",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "sweden-men"
  },
  {
   "id": "nt-2026-10-05-men",
@@ -489,7 +506,8 @@
   "link": "https://www.sportbibeln.se/fotboll/nations-league-sveriges-matcher-och-tv-tider/",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "sweden-men"
  },
  {
   "id": "nt-2026-11-14-men",
@@ -511,7 +529,8 @@
   "link": "https://www.sportbibeln.se/fotboll/nations-league-sveriges-matcher-och-tv-tider/",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "sweden-men"
  },
  {
   "id": "nt-2026-11-17-men",
@@ -533,7 +552,8 @@
   "link": "https://www.sportbibeln.se/fotboll/nations-league-sveriges-matcher-och-tv-tider/",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "sweden-men"
  },
  {
   "id": "nt-2026-10-09-women",
@@ -555,7 +575,8 @@
   "link": "https://www.svenskfotboll.se/nyheter/landslag/2026/08/biljettslapp-litauen/",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "sweden-women"
  },
  {
   "id": "nt-2026-10-13-women",
@@ -577,6 +598,7 @@
   "link": "https://www.svenskfotboll.se/nyheter/landslag/2026/08/biljettslapp-litauen/",
   "source": "curated",
   "endDate": null,
-  "ooh": null
+  "ooh": null,
+  "team": "sweden-women"
  }
 ]
