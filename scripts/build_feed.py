@@ -41,7 +41,8 @@ for e in manual:
     if crowd is None: crowd = v.get("capacity", 0)
     events.append(dict(date=e["date"], endDate=e.get("endDate"), time=e.get("time"), title=e["title"],
                        venue=v.get("name") or e.get("venueName") or "Stockholm", area=v.get("area") or e.get("area", ""),
-                       crowd=crowd or 0, audience=e.get("audience", ""), kind="team" if e.get("source") == "team" else "curated"))
+                       crowd=0 if e.get("away") else (crowd or 0), audience=e.get("audience", ""), kind="team" if e.get("source") == "team" else "curated",
+                       category=e.get("category"), away=bool(e.get("away")), comp=e.get("comp"), tv=e.get("tv")))
 
 def in_week(e):
     d = datetime.date.fromisoformat(e["date"])
@@ -57,16 +58,27 @@ for e in week:
     g["nights"] += 1
     if (e["date"], e.get("time") or "99") < (g["date"], g.get("time") or "99"):
         g.update(date=e["date"], time=e.get("time"))
-venue_rows = sorted([g for g in groups.values() if g["crowd"]], key=lambda g: (-g["crowd"], g["date"]))
-city_rows = sorted([g for g in groups.values() if not g["crowd"]], key=lambda g: g["date"])
-top = venue_rows[:6 - min(1, len(city_rows))] + city_rows[:1]
+# football first (AIK, Hammarby, national teams: home and away), then the biggest crowds, then one citywide moment
+MAX_ROWS = 6
+football = sorted([g for g in groups.values() if g.get("category") == "football"], key=lambda g: (g["date"], g.get("time") or "99"))[:3]
+others = [g for g in groups.values() if g.get("category") != "football"]
+venue_rows = sorted([g for g in others if g["crowd"]], key=lambda g: (-g["crowd"], g["date"]))
+city_rows = sorted([g for g in others if not g["crowd"]], key=lambda g: g["date"])
+room = MAX_ROWS - len(football)
+top = football + venue_rows[:room - min(1, len(city_rows))] + city_rows[:1]
+top = top[:MAX_ROWS]
 top.sort(key=lambda g: (max(g["date"], today.isoformat()), g.get("time") or "99"))
 
 def row(g):
     r = dict(date=max(g["date"], today.isoformat()), time=g.get("time"), title=g["title"][:70], venue=g["venue"],
              area=g["area"], crowd=g["crowd"], audience=g["audience"][:48])
     if g.get("endDate"): r["until"] = g["endDate"]
-    if g["nights"] > 1: r["nights"] = g["nights"]
+    if g["nights"] > 1 and g.get("category") != "football": r["nights"] = g["nights"]
+    if g.get("category") == "football":
+        r["football"] = True
+        if g.get("away"): r["away"] = True
+        if g.get("comp"): r["comp"] = g["comp"]
+        if g.get("tv"): r["tv"] = g["tv"]
     return r
 
 wx = {}
