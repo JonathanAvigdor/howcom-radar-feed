@@ -16,13 +16,13 @@ HORIZON_DAYS = 92
 
 # name to search, country filter, national team?, crowd estimate for a Stockholm home game, audience
 TEAMS = [
-    dict(key="aik", search="AIK", country="Sweden", national=False, exact="AIK Stockholm", alt=["AIK"], crowd=22000,
+    dict(key="aik", id=377, search="AIK", country="Sweden", national=False, exact="AIK Stockholm", alt=["AIK", "AIK stockholm"], crowd=22000,
          audience="18–55, football supporters"),
-    dict(key="hammarby", search="Hammarby", country="Sweden", national=False, exact="Hammarby FF", alt=["Hammarby"], crowd=25000,
+    dict(key="hammarby", id=363, search="Hammarby", country="Sweden", national=False, exact="Hammarby FF", alt=["Hammarby"], crowd=25000,
          audience="18–55, football supporters"),
-    dict(key="sweden-men", search="Sweden", country=None, national=True, exact="Sweden", alt=[], crowd=35000,
+    dict(key="sweden-men", id=5, search="Sweden", country=None, national=True, exact="Sweden", alt=[], crowd=35000,
          audience="All ages, national-team audience"),
-    dict(key="sweden-women", search="Sweden", country=None, national=True, exact="Sweden W", alt=["Sweden Women"], crowd=18000,
+    dict(key="sweden-women", id=1739, search="Sweden", country=None, national=True, exact="Sweden W", alt=["Sweden Women"], crowd=18000,
          audience="All ages, families and national-team fans"),
 ]
 STOCKHOLM_VENUES = {  # API venue name (lower case) -> radar venue key
@@ -67,10 +67,16 @@ def main():
     horizon = today + datetime.timedelta(days=HORIZON_DAYS)
     out, seen = [], set()
     for t in TEAMS:
-        tid, tname = find_team(t)
+        tid, tname = t.get("id"), t["exact"]
+        if not tid:
+            tid, tname = find_team(t)
         if not tid: continue
-        d = get("fixtures", team=tid, next=15, timezone=TZ)
-        rows = d.get("response", [])
+        # free plans can't use next=; ask for the season and a date window instead
+        rows = []
+        for season in sorted({today.year, horizon.year}):
+            d = get("fixtures", team=tid, season=season, timezone=TZ,
+                    **{"from": today.isoformat(), "to": horizon.isoformat()})
+            rows += d.get("response", [])
         print(f"{tname} (id {tid}): {len(rows)} upcoming fixtures")
         for f in rows:
             fx, lg, tm = f["fixture"], f["league"], f["teams"]
