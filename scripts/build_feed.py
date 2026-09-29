@@ -35,6 +35,14 @@ for m in load("tm_*.json") + load("tm/*.json"):
 manual = [unwrap(json.load(open(p))) for p in sorted(glob.glob(os.path.join(src, "events_manual", "*.json")))]
 if os.path.exists(os.path.join(src, "events.json")):
     manual += json.load(open(os.path.join(src, "events.json")))
+# matches from API-Football replace the hand-typed football rows in events.json
+api_fb = os.path.join(src, "football_api.json")
+if os.path.exists(api_fb):
+    fb = json.load(open(api_fb))
+    if fb:
+        teams = {e.get("team") for e in fb}
+        manual = [e for e in manual if not (e.get("category") == "football" and e.get("team") in teams)] + fb
+        print(f"Using {len(fb)} matches from API-Football for {sorted(teams)}; events.json covers the rest")
 for e in manual:
     v = venues.get(e.get("venueKey") or "", {})
     crowd = e.get("crowd")
