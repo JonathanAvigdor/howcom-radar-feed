@@ -16,13 +16,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Fetch events and weather, build today.json
+      - name: Fetch events, football and weather, build today.json
         env:
           TM_KEY: ${{ secrets.TM_KEY }}
+          FOOTBALL_KEY: ${{ secrets.FOOTBALL_KEY }}
         run: |
           mkdir -p work && cd work
           python ../scripts/refresh.py "$TM_KEY"
           cp ../events.json db/
+          python ../scripts/football.py db/football_api.json
           python ../scripts/build_feed.py db ../today.json
       - name: Publish
         run: |
