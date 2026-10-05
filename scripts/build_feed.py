@@ -9,7 +9,7 @@ Usage: python3 build_feed.py <data_dir> <out_file>
   events_manual/<id>.json  team + researched events
 Output is a small JSON file (~2 KB): the week's biggest events and a 6-day forecast.
 """
-import json, sys, os, glob, datetime
+import json, sys, os, glob, datetime, re
 from zoneinfo import ZoneInfo
 
 src, out = sys.argv[1], sys.argv[2]
@@ -43,6 +43,9 @@ if os.path.exists(api_fb):
         teams = {e.get("team") for e in fb}
         manual = [e for e in manual if not (e.get("category") == "football" and e.get("team") in teams)] + fb
         print(f"Using {len(fb)} matches from API-Football for {sorted(teams)}; events.json covers the rest")
+# Visit Stockholm events (skipped below when Ticketmaster already lists the same show that day)
+vs_file = os.path.join(src, "visitstockholm.json")
+vs_events = json.load(open(vs_file)) if os.path.exists(vs_file) else []
 for e in manual:
     v = venues.get(e.get("venueKey") or "", {})
     crowd = e.get("crowd")
@@ -57,6 +60,18 @@ def in_week(e):
     last = datetime.date.fromisoformat(e.get("endDate") or e["date"])
     return last >= today and d <= end
 
+def _norm(t):
+    return re.sub(r"[^a-z0-9åäö]", "", (t or "").lower())
+known = {(e["date"], _norm(e["title"])[:12]) for e in events}
+added = 0
+for e in vs_events:
+    k = (e["date"], _norm(e["title"])[:12])
+    if k in known: continue
+    known.add(k); added += 1
+    events.append(dict(date=e["date"], endDate=e.get("endDate"), time=e.get("time"), title=e["title"],
+                       venue=e.get("venueName") or "Stockholm", area=e.get("area", ""), crowd=e.get("crowd") or 0,
+                       audience=e.get("audience", ""), kind="visitstockholm", category="visitstockholm"))
+if vs_events: print(f"Visit Stockholm: {added} events added, {len(vs_events) - added} already listed")
 week = [e for e in events if in_week(e)]
 # one row per show: collapse repeat nights of the same title at the same venue
 groups = {}
@@ -68,7 +83,9 @@ for e in week:
         g.update(date=e["date"], time=e.get("time"))
 # football first (AIK, Hammarby, national teams: home and away), then the biggest crowds, then one citywide moment
 MAX_ROWS = 6
-football = sorted([g for g in groups.values() if g.get("category") == "football"], key=lambda g: (g["date"], g.get("time") or "99"))[:3]
+# home games in Stockholm before away games (TV), then by date; at most 3 football rows
+football = sorted([g for g in groups.values() if g.get("category") == "football"],
+                  key=lambda g: (bool(g.get("away")), g["date"], g.get("time") or "99"))[:3]
 others = [g for g in groups.values() if g.get("category") != "football"]
 venue_rows = sorted([g for g in others if g["crowd"]], key=lambda g: (-g["crowd"], g["date"]))
 city_rows = sorted([g for g in others if not g["crowd"]], key=lambda g: g["date"])
