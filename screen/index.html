@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, height=1920, initial-scale=1">
+<title>HowCom Stockholm This Week</title>
+<style>
+/* Hanken Grotesk (free, bundled) stands in for the brand font Area Normal. */
+@font-face{font-family:"HowCom Sans";font-weight:400;src:url("fonts/hanken-grotesk-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"HowCom Sans";font-weight:500;src:url("fonts/hanken-grotesk-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"HowCom Sans";font-weight:600;src:url("fonts/hanken-grotesk-latin-600-normal.woff2") format("woff2")}
+:root{
+  /* HowCom brand (howcom.se) */
+  --black:#1A1A1A; --charcoal:#262525; --line:#3A3736;
+  --cream:#F5EFE9; --taupe:#E1DBD6; --muted:#A39B95; --orange:#FB9D5E;
+  --burgundy:#44121A; --rose:#8D515B; --mint:#C1E5D8;
+  --font:"HowCom Sans","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:var(--black);overflow:hidden}
+body{color:var(--cream);font-family:var(--font);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;background:var(--black);overflow:hidden}
+.page{position:absolute;inset:0;padding:72px 72px 60px;display:flex;flex-direction:column}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center}
+.top img{height:44px;width:auto;display:block}
+.top .today{font-size:30px;color:var(--taupe);letter-spacing:.01em}
+
+/* weather card */
+.wx{position:relative;margin-top:48px;background:var(--cream);color:var(--black);border-radius:28px;padding:44px 48px 36px;overflow:hidden}
+.wx .quarter{position:absolute;right:-1px;top:-1px;width:210px;height:210px;background:var(--orange);border-bottom-left-radius:100%;transform-origin:100% 0}
+.wx .label{font-size:24px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rose)}
+.wx .now{display:flex;align-items:flex-end;gap:28px;margin-top:14px;padding-right:190px}
+.wx .temp{font-size:170px;font-weight:400;line-height:.82;letter-spacing:-.04em}
+.wx .temp span{font-size:72px;color:var(--muted);letter-spacing:0}
+.wx .cond{padding-bottom:12px}
+.wx .cond b{display:block;font-size:44px;font-weight:500;line-height:1.05}
+.wx .cond small{display:block;font-size:25px;line-height:1.3;color:#5E5753;margin-top:8px}
+.wx .ico-now{position:absolute;right:26px;top:22px;width:120px;height:120px}
+.days{display:grid;grid-template-columns:repeat(5,1fr);margin-top:36px;border-top:2px solid var(--taupe)}
+.day{display:flex;flex-direction:column;align-items:center;padding-top:20px;gap:6px}
+.day+.day{border-left:2px solid var(--taupe)}
+.day .wd{font-size:24px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.day svg{width:64px;height:64px}
+.day .t{font-size:34px;font-weight:500}
+.day .t span{color:var(--muted);font-weight:400}
+.day .r{font-size:22px;color:#5E5753}
+.day.wet .r{color:var(--burgundy);font-weight:600}
+.wx .hint{margin-top:22px;font-size:24px;color:#5E5753}
+.wx .hint b{color:var(--burgundy);font-weight:600}
+
+/* events */
+.evhead{margin-top:48px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+h1{font-size:68px;font-weight:400;line-height:1;letter-spacing:-.02em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--orange)}
+.range{font-size:26px;color:var(--muted);text-align:right;white-space:nowrap;padding-bottom:6px}
+.rows{margin-top:28px;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:118px 1fr auto;column-gap:32px;align-items:start;padding:18px 0;border-top:2px solid var(--line)}
+.date .wd{display:block;font-size:22px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--orange)}
+.date .dn{display:block;font-size:56px;font-weight:400;line-height:1;margin-top:4px}
+.what .title{font-size:34px;font-weight:500;line-height:1.12;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.what .where{font-size:24px;color:var(--taupe);margin-top:6px}
+.what .aud{font-size:22px;color:var(--muted);margin-top:4px}
+.crowd{text-align:right;padding-top:2px}
+.crowd b{display:block;font-size:40px;font-weight:500;color:var(--orange);white-space:nowrap}
+.crowd small{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.crowd.city b{color:var(--mint)}
+.crowd.tv b{color:var(--taupe)}
+.aud .tag{display:inline-block;font-size:18px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--black);background:var(--orange);border-radius:6px;padding:2px 8px;margin-right:10px;vertical-align:2px}
+.empty{margin-top:40px;font-size:40px;line-height:1.3;color:var(--taupe)}
+.foot{margin-top:18px;padding-top:20px;border-top:2px solid var(--line);display:flex;justify-content:space-between;gap:24px;font-size:20px;color:var(--muted)}
+.foot .stale{color:var(--orange)}
+.progress{position:absolute;left:0;bottom:0;height:8px;width:0;background:var(--orange)}
+@keyframes sweep{from{transform:scale(.6)}to{transform:scale(1)}}
+@keyframes rise{from{transform:translateY(14px);opacity:.35}to{transform:none;opacity:1}}
+.playing .quarter{animation:sweep .9s cubic-bezier(.2,.7,.2,1) both}
+.playing .row{animation:rise .6s ease-out both}
+@media (prefers-reduced-motion:reduce){.playing .quarter,.playing .row{animation:none}}
+</style>
+<script src="config.js"></script>
+<script src="data.js"></script>
+</head>
+<body>
+<div id="stage"><div class="page" id="page"></div><div class="progress" id="progress"></div></div>
+<script>
+/* HowCom office screen (Bauer / Broadsign HTML5, 1080x1920): weather + this week's events on one page.
+   Rendered static before play; motion starts only in BroadSignPlay(). */
+var CFG = window.RADAR_CONFIG || {};
+var TZ = "Europe/Stockholm";
+var WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], WDL = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var MO = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var MOL = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+var played = false, feed = null;
+
+function todayIso(){
+  try { var p = new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date()), o = {};
+    p.forEach(function(x){ o[x.type] = x.value; }); return o.year+"-"+o.month+"-"+o.day; }
+  catch(e){ var d = new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+}
+function pd(s){ var a = s.split("-"); return new Date(+a[0], +a[1]-1, +a[2]); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function fmtK(n){ if (n >= 10000) return "~" + Math.round(n/1000) + "k"; if (n >= 1000) return "~" + (Math.round(n/100)/10) + "k"; return "< 1k"; }
+
+/* data: live feed -> cached copy -> snapshot bundled in the package */
+function valid(f){ return f && f.v === 1 && f.generatedAt && Array.isArray(f.events); }
+function readCache(){ try { var f = JSON.parse(localStorage.getItem("radarFeed") || "null"); return valid(f) ? f : null; } catch(e){ return null; } }
+function writeCache(f){ try { localStorage.setItem("radarFeed", JSON.stringify(f)); } catch(e){} }
+function newest(){ var l = [].slice.call(arguments).filter(valid); l.sort(function(a,b){ return a.generatedAt < b.generatedAt ? 1 : -1; }); return l[0] || null; }
+function getJSON(url, ms, cb){
+  var x, doneOnce = false, fin = function(v){ if (!doneOnce){ doneOnce = true; cb(v); } };
+  try {
+    x = new XMLHttpRequest(); x.open("GET", url, true); x.timeout = ms;
+    x.onload = function(){ try { fin((x.status === 200 || x.status === 0) && x.responseText ? JSON.parse(x.responseText) : null); } catch(e){ fin(null); } };
+    x.onerror = x.ontimeout = x.onabort = function(){ fin(null); };
+    x.send();
+  } catch(e){ fin(null); }
+  setTimeout(function(){ try { x && x.abort(); } catch(e){} fin(null); }, ms + 200);
+}
+/* Data sources, newest wins: a local today.json next to index.html (if Bauer runs Monitor Sync),
+   the live file on GitHub, the copy saved on the player, the snapshot packed in the zip. */
+function loadFeed(done){
+  var snap = valid(window.RADAR_SNAPSHOT) ? window.RADAR_SNAPSHOT : null, cached = readCache();
+  var ms = CFG.timeoutMs || 4000, urls = [CFG.localFile || "today.json"];
+  if (CFG.feedUrl) urls.push(CFG.feedUrl);
+  var got = [], left = urls.length;
+  urls.forEach(function(u){
+    getJSON(u, ms, function(f){
+      if (valid(f)) got.push(f);
+      if (--left === 0) {
+        var best = newest.apply(null, got);
+        if (best) writeCache(best);
+        done(newest(best, cached, snap));
+      }
+    });
+  });
+}
+
+/* weather */
+function wxInfo(code){
+  if (code == null) return ["—","cloud"];
+  if (code === 0) return ["Clear","sun"]; if (code <= 2) return ["Partly cloudy","part"]; if (code === 3) return ["Overcast","cloud"];
+  if (code === 45 || code === 48) return ["Fog","cloud"]; if (code >= 51 && code <= 57) return ["Drizzle","rain"];
+  if (code >= 61 && code <= 67) return ["Rain","rain"]; if (code >= 71 && code <= 77) return ["Snow","snow"];
+  if (code >= 80 && code <= 82) return ["Showers","rain"]; if (code >= 85 && code <= 86) return ["Snow showers","snow"];
+  if (code >= 95) return ["Thunderstorm","rain"]; return ["—","cloud"];
+}
+function isWet(d){ return d.precip >= 2 || d.pop >= 60; }
+function icon(kind, cls){
+  var sunC = "#FB9D5E", cloudC = "#A39B95", rainC = "#44121A";
+  var sun = '<circle cx="46" cy="42" r="17" fill="'+sunC+'"/>' + [0,45,90,135,180,225,270,315].map(function(a){ var r = a*Math.PI/180; return '<line x1="'+(46+Math.cos(r)*25).toFixed(1)+'" y1="'+(42+Math.sin(r)*25).toFixed(1)+'" x2="'+(46+Math.cos(r)*33).toFixed(1)+'" y2="'+(42+Math.sin(r)*33).toFixed(1)+'" stroke="'+sunC+'" stroke-width="5" stroke-linecap="round"/>'; }).join("");
+  var cloud = function(x,y){ return '<path transform="translate('+x+' '+y+')" d="M18 58h52a18 18 0 0 0 0-36 26 26 0 0 0-49-6A21 21 0 0 0 18 58z" fill="'+cloudC+'"/>'; };
+  var b = "";
+  if (kind === "sun") b = '<g transform="translate(4 8)">' + sun + '</g>';
+  else if (kind === "part") b = '<g transform="translate(-6 -6)">' + sun + '</g>' + cloud(14, 26);
+  else if (kind === "cloud") b = cloud(6, 14);
+  else if (kind === "rain") b = cloud(6, 4) + [24,44,64].map(function(x){ return '<line x1="'+x+'" y1="74" x2="'+(x-6)+'" y2="90" stroke="'+rainC+'" stroke-width="6" stroke-linecap="round"/>'; }).join("");
+  else b = cloud(6, 4) + [26,46,66].map(function(x){ return '<circle cx="'+x+'" cy="84" r="5" fill="'+rainC+'"/>'; }).join("");
+  return '<svg class="'+(cls||"")+'" viewBox="0 0 100 100" aria-hidden="true">' + b + '</svg>';
+}
+
+function weatherHtml(f, t){
+  var days = (f && f.weather || []).filter(function(d){ return d.date >= t; }).slice(0, 6);
+  if (!days.length) {
+    var m = t.slice(5,7), n = f && f.normals && f.normals[m];
+    return '<section class="wx"><div class="quarter"></div><div class="label">Stockholm weather</div><div class="now">' +
+      (n ? '<div class="temp">' + n.tmax + '°<span>/' + n.tmin + '°</span></div>' : '') +
+      '<div class="cond"><b>Typical ' + MOL[+m-1] + '</b><small>Live forecast unavailable</small></div></div></section>';
+  }
+  var d0 = days[0], w0 = wxInfo(d0.code), rest = days.slice(1, 6), wet = [];
+  if (isWet(d0)) wet.push("today");
+  var cols = rest.map(function(d){
+    var w = wxInfo(d.code), dd = pd(d.date), wd = isWet(d); if (wd) wet.push(WD[dd.getDay()]);
+    return '<div class="day' + (wd ? " wet" : "") + '"><span class="wd">' + WD[dd.getDay()] + '</span>' + icon(w[1]) +
+      '<span class="t">' + d.tmax + '°<span> ' + d.tmin + '°</span></span><span class="r">' + (d.pop != null ? d.pop + "% rain" : "") + '</span></div>';
+  }).join("");
+  var meta = (d0.pop != null ? d0.pop + "% chance of rain" : "") + (d0.precip > 0 ? " · " + d0.precip + " mm" : "") + "<br>Wind " + Math.round((d0.wind || 0)/3.6) + " m/s";
+  var hint = wet.length ? '<b>Wet: ' + esc(wet.join(", ")) + '.</b> Rain pushes crowds into stations and malls.' : 'Dry days ahead. Good conditions for street-level OOH.';
+  return '<section class="wx"><div class="quarter"></div>' + icon(w0[1], "ico-now") +
+    '<div class="label">' + (d0.date === t ? "Today" : WDL[pd(d0.date).getDay()]) + ' in Stockholm</div>' +
+    '<div class="now"><div class="temp">' + d0.tmax + '°<span>/' + d0.tmin + '°</span></div><div class="cond"><b>' + w0[0] + '</b><small>' + meta + '</small></div></div>' +
+    (cols ? '<div class="days">' + cols + '</div>' : '') + '<div class="hint">' + hint + '</div></section>';
+}
+
+function eventsHtml(f, t){
+  var s = pd(t), e = pd(t); e.setDate(e.getDate() + 6);
+  var evs = (f && f.events || []).filter(function(x){ return (x.until || x.date) >= t; }).slice(0, 6);
+  var rows = evs.map(function(x){
+    var d = pd(x.date < t ? t : x.date);
+    var extra = x.nights > 1 ? " · " + x.nights + " dates" : (x.until && x.until !== x.date ? " · until " + pd(x.until).getDate() + " " + MO[pd(x.until).getMonth()] : "");
+    var crowd = x.away ? '<div class="crowd tv"><b>TV</b><small>away game</small></div>' :
+      x.crowd ? '<div class="crowd"><b>' + fmtK(x.crowd) + '</b><small>people</small></div>' : '<div class="crowd city"><b>City</b><small>citywide</small></div>';
+    var title = x.football ? x.title.replace(/\s*\([^)]*\)\s*$/, "") : x.title;
+    var aud = x.football ? '<span class="tag">' + esc(x.comp || "Football") + '</span>' + (x.tv ? esc(x.tv) : "") : esc(x.audience || "");
+    return '<div class="row' + (x.football ? ' fb' : '') + '"><div class="date"><span class="wd">' + (x.date <= t ? "Today" : WD[d.getDay()]) + '</span><span class="dn">' + d.getDate() + '</span></div>' +
+      '<div class="what"><div class="title">' + esc(title) + '</div><div class="where">' + esc(x.venue) + (x.time ? " · " + esc(x.time) : "") + esc(extra) + '</div>' +
+      (aud ? '<div class="aud">' + aud + '</div>' : '') + '</div>' + crowd + '</div>';
+  }).join("");
+  return '<div class="evhead"><h1>This week in <em>Stockholm</em></h1><div class="range">' + s.getDate() + ' ' + MO[s.getMonth()] + ' – ' + e.getDate() + ' ' + MO[e.getMonth()] +
+    (f && f.eventsInWeek ? '<br>' + f.eventsInWeek + ' events tracked' : '') + '</div></div>' +
+    '<div class="rows">' + (rows || '<div class="empty">No big events on the radar this week.</div>') + '</div>';
+}
+
+function footerHtml(f){
+  var gen = f ? new Date(f.generatedAt) : null, stale = !gen || (Date.now() - gen.getTime()) > 36*3600*1000, when = "";
+  if (gen) { var d = pd(f.generatedAt.slice(0,10)); when = WD[d.getDay()] + " " + d.getDate() + " " + MO[d.getMonth()] + ", " + f.generatedAt.slice(11,16); }
+  return '<div class="foot"><span>Crowd = venue capacity · Ticketmaster, Open-Meteo,<br>Visit Stockholm (Stockholm Business Region, CC BY 4.0)</span>' +
+    '<span class="' + (stale ? "stale" : "") + '">' + (gen ? (stale ? "Data from " : "Updated ") + esc(when) : "No live data") + '</span></div>';
+}
+
+function render(f){
+  var t = todayIso(), d = pd(t);
+  document.getElementById("page").innerHTML =
+    '<div class="top"><img src="howcom-logo.png" alt="HowCom"><span class="today">' + WDL[d.getDay()] + ' ' + d.getDate() + ' ' + MOL[d.getMonth()] + '</span></div>' +
+    weatherHtml(f, t) + eventsHtml(f, t) + footerHtml(f);
+  trimRows();
+}
+function trimRows(){
+  var box = document.querySelector(".rows"); if (!box) return;
+  // drop the last non-football row until everything fits; football rows are kept first
+  while (box.scrollHeight > box.clientHeight + 1 && box.querySelectorAll(".row").length > 1) {
+    var rest = box.querySelectorAll(".row:not(.fb)"), all = box.querySelectorAll(".row");
+    box.removeChild(rest.length ? rest[rest.length - 1] : all[all.length - 1]);
+  }
+  [].forEach.call(box.querySelectorAll(".row"), function(el, i){ el.style.animationDelay = (0.15 + i * 0.08) + "s"; });
+}
+function fit(){
+  var s = Math.min(window.innerWidth / 1080, window.innerHeight / 1920) || 1, st = document.getElementById("stage");
+  st.style.transform = "scale(" + s + ")"; st.style.left = Math.max(0, (window.innerWidth - 1080*s) / 2) + "px";
+}
+function slotMs(){ var b = window.BroadSignObject, n = parseInt(b && (b.expected_slot_duration_ms || b.expectedSlotDurationMs), 10); return n > 0 ? n : (CFG.defaultSlotMs || 5000); }
+function BroadSignPlay(){
+  if (played && !window.RADAR_PREVIEW) return; played = true;
+  var st = document.getElementById("stage"), p = document.getElementById("progress"), ms = slotMs();
+  st.classList.remove("playing"); void st.offsetWidth; st.classList.add("playing");
+  p.style.transition = "none"; p.style.width = "0"; void p.offsetWidth; p.style.transition = "width " + ms + "ms linear"; p.style.width = "100%";
+}
+window.BroadSignPlay = BroadSignPlay;
+
+(function init(){
+  fit(); window.addEventListener("resize", fit);
+  loadFeed(function(f){
+    feed = f; render(f);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ render(feed); });
+    if (window.RADAR_PREVIEW) { BroadSignPlay(); setInterval(BroadSignPlay, slotMs()); }  // preview only; the screen waits for BroadSignPlay()
+  });
+})();
+</script>
+</body>
+</html>
