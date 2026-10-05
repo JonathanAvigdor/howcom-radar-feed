@@ -121,9 +121,11 @@ function getJSON(url, ms, cb){
    the live file on GitHub, the copy saved on the player, the snapshot packed in the zip. */
 function loadFeed(done){
   var snap = valid(window.RADAR_SNAPSHOT) ? window.RADAR_SNAPSHOT : null, cached = readCache();
-  var ms = CFG.timeoutMs || 4000, urls = [CFG.localFile || "today.json"];
+  var ms = CFG.timeoutMs || 4000, web = /github\.io$/.test(location.hostname);
+  var urls = web ? [] : [CFG.localFile || "today.json"];  // local copy only exists inside Bauer's player (Monitor Sync)
   if (CFG.feedUrl) urls.push(CFG.feedUrl);
   var got = [], left = urls.length;
+  if (!left) { done(newest(cached, snap)); return; }
   urls.forEach(function(u){
     getJSON(u, ms, function(f){
       if (valid(f)) got.push(f);
@@ -236,6 +238,10 @@ function BroadSignPlay(){
   p.style.transition = "none"; p.style.width = "0"; void p.offsetWidth; p.style.transition = "width " + ms + "ms linear"; p.style.width = "100%";
 }
 window.BroadSignPlay = BroadSignPlay;
+/* Web Redirect version: cache files offline (only on https; skipped inside the zip) */
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  try { navigator.serviceWorker.register("sw.js"); } catch (e) {}
+}
 
 (function init(){
   fit(); window.addEventListener("resize", fit);
