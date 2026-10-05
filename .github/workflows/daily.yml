@@ -25,6 +25,7 @@ jobs:
           python ../scripts/refresh.py "$TM_KEY"
           cp ../events.json db/
           python ../scripts/football.py db/football_api.json
+          python ../scripts/visitstockholm.py db/visitstockholm.json
           python ../scripts/build_feed.py db ../today.json
       - name: Publish
         run: |
